@@ -8,9 +8,7 @@ date: 2026-08-28
 
 <!-- CHANGE THIS: replace with your own notes -->
 
-Set up the portfolio workflow: made a repository from a template, cloned it with
-GitHub Desktop, edited files in RStudio, rendered with Quarto, and published to
-GitHub Pages.
+On Friday I learned how to use R and Quarto together to create a website. I am fascinated by the many capabilities and wide ranging uses for these applications! 
 
 ## Key Concepts
 
@@ -35,9 +33,9 @@ sessionInfo()$R.version$version.string
 
 <!-- CHANGE THIS: 3-4 sentences -->
 
-What I want out of this course:
+What I want out of this course: I want to learn how to better manage data file structures and workflows. 
 
-One thing I'm nervous about:
+One thing I'm nervous about: I am nervous that I may not fully understand how all of the coding components operate even if I am able to complete various tasks. 
 
 ## Questions I Still Have
 
