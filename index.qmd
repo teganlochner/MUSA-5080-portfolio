@@ -2,7 +2,7 @@
 title: "Home"
 ---
 
-# YOUR NAME HERE {#welcome}
+# Tegan Lochner {#welcome}
 
 <!-- CHANGE THIS: replace with your own name above -->
 
