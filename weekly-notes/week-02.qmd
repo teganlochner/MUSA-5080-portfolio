@@ -1,0 +1,39 @@
+---
+title: "Week 2: dplyr"
+description: "Analyzing and manipulating US Census data using dplyr."
+date: 2026-09-04
+---
+
+## What We Did
+
+<!-- CHANGE THIS: replace with your own notes -->
+
+On Friday I learned about how US Census data is collected and how it's collection methods may impact data analysis. Additionally, I also learned the difference between _quarto.yml and the individual page .yml after getting the answer wrong on the in class quiz. 
+
+## Key Concepts
+
+1. dplyr: R package that is used for cleaning, transforming, and manipulating data. It is part of the tidyverse ecosystem. 
+2. filter -> rows vs. select -> columns: This can easily be remembered because filte(r) and sele(c)t.
+3. THE PIPE: The pipe allows us to write several operations in a row with minimal text and objects. It can be thought of as "and then".
+4. data shapes, long vs. wide: If output = wide, two series are places side by side which allows for easier comparison.
+
+
+## Proving R Works
+
+The chunk below runs when this page renders. If you can see a result underneath
+it on your published site, R and Quarto are talking to each other correctly.
+
+```{r}
+sessionInfo()$R.version$version.string
+```
+
+## Reflection
+
+<!-- CHANGE THIS: 3-4 sentences -->
+
+After Friday's class, I think that I am much faster at typing code. I am starting to pick up on the functions of different punctuation in R, I can begin to predict what a command will do, and what errors may arise. Furthermore, between this class and my python class, I am beginning to understand/recognize how the same functions are written differently across various coding languages. 
+
+## Questions I Still Have
+
+- If some block groups in the Census data have such large margins of error, how can we reliably / ethically use this data to make conduct research that may ultimately lead to large scale policy change? 
+-

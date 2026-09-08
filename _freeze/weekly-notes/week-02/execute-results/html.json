@@ -1,0 +1,15 @@
+{
+  "hash": "07b787a14d6cba67f18bcbf0128ce699",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Week 2: dplyr\"\ndescription: \"Analyzing and manipulating US Census data using dplyr.\"\ndate: 2026-09-04\n---\n\n## What We Did\n\n<!-- CHANGE THIS: replace with your own notes -->\n\nOn Friday I learned about how US Census data is collected and how it's collection methods may impact data analysis. Additionally, I also learned the difference between _quarto.yml and the individual page .yml after getting the answer wrong on the in class quiz. \n\n## Key Concepts\n\n1. dplyr: R package that is used for cleaning, transforming, and manipulating data. It is part of the tidyverse ecosystem. \n2. filter -> rows vs. select -> columns: This can easily be remembered because filte(r) and sele(c)t.\n3. THE PIPE: The pipe allows us to write several operations in a row with minimal text and objects. It can be thought of as \"and then\".\n4. data shapes, long vs. wide: If output = wide, two series are places side by side which allows for easier comparison.\n\n\n## Proving R Works\n\nThe chunk below runs when this page renders. If you can see a result underneath\nit on your published site, R and Quarto are talking to each other correctly.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nsessionInfo()$R.version$version.string\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] \"R version 4.6.1 (2026-06-24)\"\n```\n\n\n:::\n:::\n\n\n## Reflection\n\n<!-- CHANGE THIS: 3-4 sentences -->\n\nAfter Friday's class, I think that I am much faster at typing code. I am starting to pick up on the functions of different punctuation in R, I can begin to predict what a command will do, and what errors may arise. Furthermore, between this class and my python class, I am beginning to understand/recognize how the same functions are written differently across various coding languages. \n\n## Questions I Still Have\n\n- If some block groups in the Census data have such large margins of error, how can we reliably / ethically use this data to make conduct research that may ultimately lead to large scale policy change? \n-\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
