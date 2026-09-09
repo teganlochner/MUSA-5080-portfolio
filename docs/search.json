@@ -159,5 +159,68 @@
     "title": "Week 2: dplyr",
     "section": "Questions I Still Have",
     "text": "Questions I Still Have\n\nIf some block groups in the Census data have such large margins of error, how can we reliably / ethically use this data to make conduct research that may ultimately lead to large scale policy change?"
+  },
+  {
+    "objectID": "assignments/assignment2 .html",
+    "href": "assignments/assignment2 .html",
+    "title": "Assignment 2: Who Do We Know the Least About?",
+    "section": "",
+    "text": "library(tidyverse)\nlibrary(tidycensus)"
+  },
+  {
+    "objectID": "assignments/assignment2 .html#setup",
+    "href": "assignments/assignment2 .html#setup",
+    "title": "Assignment 2: Who Do We Know the Least About?",
+    "section": "",
+    "text": "library(tidyverse)\nlibrary(tidycensus)"
+  },
+  {
+    "objectID": "assignments/assignment2 .html#the-question",
+    "href": "assignments/assignment2 .html#the-question",
+    "title": "Assignment 2: Who Do We Know the Least About?",
+    "section": "The question",
+    "text": "The question\nEvery number the American Community Survey publishes is an estimate drawn from a sample, not a count. That means every number comes with a margin of error — a statement about how wrong it might be.\nMost people ignore it. In this assignment, you won’t.\nIn this analysis, I will look at median gross rent in Illinois. I will explore which communities are measured the most and least reliably, and what impacts that could have on public policy."
+  },
+  {
+    "objectID": "assignments/assignment2 .html#choosing-what-to-measure",
+    "href": "assignments/assignment2 .html#choosing-what-to-measure",
+    "title": "Assignment 2: Who Do We Know the Least About?",
+    "section": "Choosing what to measure",
+    "text": "Choosing what to measure\n\nmy_state &lt;- \"IL\"        # two-letter abbreviation, in quotes\nmy_variable &lt;- \"B25064_001\"     # the variable code, in quotes"
+  },
+  {
+    "objectID": "assignments/assignment2 .html#pulling-the-data",
+    "href": "assignments/assignment2 .html#pulling-the-data",
+    "title": "Assignment 2: Who Do We Know the Least About?",
+    "section": "Pulling the data",
+    "text": "Pulling the data\n\ncounty_data &lt;- get_acs(\n  geography = \"county\",\n  variables = my_variable,\n  state = my_state,\n  year = 2023,\n  survey = \"acs5\"\n)\n\nLet’s look at what came back.\n\ndim(county_data)\n\n[1] 102   5\n\nhead(county_data)\n\n# A tibble: 6 × 5\n  GEOID NAME                       variable   estimate   moe\n  &lt;chr&gt; &lt;chr&gt;                      &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;\n1 17001 Adams County, Illinois     B25064_001      826    43\n2 17003 Alexander County, Illinois B25064_001      540   214\n3 17005 Bond County, Illinois      B25064_001      735    34\n4 17007 Boone County, Illinois     B25064_001     1011    71\n5 17009 Brown County, Illinois     B25064_001      724   119\n6 17011 Bureau County, Illinois    B25064_001      838    66\n\n\n[There are 102 rows of data which correlates to the 102 counties in Illinois. ]"
+  },
+  {
+    "objectID": "assignments/assignment2 .html#how-big-is-the-margin-of-error",
+    "href": "assignments/assignment2 .html#how-big-is-the-margin-of-error",
+    "title": "Assignment 2: Who Do We Know the Least About?",
+    "section": "How big is the margin of error?",
+    "text": "How big is the margin of error?\nA margin of error of 3,000 means something very different for an estimate of 20,000 than for an estimate of 200,000. To compare across places, we need it as a percentage.\n\ncounty_data &lt;- county_data |&gt; \n  mutate(moe_pct = moe / estimate * 100)\n\nNow sort to see which counties are measured least reliably.\n\ncounty_data |&gt; \n  arrange(desc(moe_pct)) |&gt; \n  select(NAME, estimate, moe, moe_pct) |&gt; \n  head(10)\n\n# A tibble: 10 × 4\n   NAME                       estimate   moe moe_pct\n   &lt;chr&gt;                         &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;\n 1 Hardin County, Illinois         342   156    45.6\n 2 Alexander County, Illinois      540   214    39.6\n 3 Pope County, Illinois           438   134    30.6\n 4 Hamilton County, Illinois       566   128    22.6\n 5 Gallatin County, Illinois       500    94    18.8\n 6 Menard County, Illinois         780   142    18.2\n 7 Johnson County, Illinois        634   115    18.1\n 8 Brown County, Illinois          724   119    16.4\n 9 Massac County, Illinois         793   129    16.3\n10 Schuyler County, Illinois       836   131    15.7\n\n\n[Hardin County, Illinois has the largest margin or error relative to its estimate. In the census data from 2019-2023, its’ population is 3623, and it’s margin of error percentage is 45.6%.]"
+  },
+  {
+    "objectID": "assignments/assignment2 .html#sorting-counties-into-reliability-categories",
+    "href": "assignments/assignment2 .html#sorting-counties-into-reliability-categories",
+    "title": "Assignment 2: Who Do We Know the Least About?",
+    "section": "Sorting counties into reliability categories",
+    "text": "Sorting counties into reliability categories\n\ncounty_data &lt;- county_data |&gt; \n  mutate(reliability = case_when(\n    moe_pct &lt; 5  ~ \"High confidence\",\n    moe_pct &lt; 10 ~ \"Moderate\",\n    TRUE         ~ \"Low confidence\"\n  ))\n\ncount(county_data, reliability)\n\n# A tibble: 3 × 2\n  reliability         n\n  &lt;chr&gt;           &lt;int&gt;\n1 High confidence    38\n2 Low confidence     21\n3 Moderate           43\n\n\n[High confidence: 38 counties, Moderate confidence: 43 counties, Low confidence: 21 counties]"
+  },
+  {
+    "objectID": "assignments/assignment2 .html#is-the-margin-of-error-bigger-in-small-places",
+    "href": "assignments/assignment2 .html#is-the-margin-of-error-bigger-in-small-places",
+    "title": "Assignment 2: Who Do We Know the Least About?",
+    "section": "Is the margin of error bigger in small places?",
+    "text": "Is the margin of error bigger in small places?\nTo answer this we need population and our variable side by side, in the same row. That means a wide pull.\n\ncounty_wide &lt;- get_acs(\n  geography = \"county\",\n  variables = c(myvar = my_variable,\n                pop   = \"B01003_001\"),\n  state = my_state,\n  year = 2023,\n  survey = \"acs5\",\n  output = \"wide\"\n)\n\nhead(county_wide)\n\n# A tibble: 6 × 6\n  GEOID NAME                       myvarE myvarM  popE  popM\n  &lt;chr&gt; &lt;chr&gt;                       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1 17001 Adams County, Illinois        826     43 65166    NA\n2 17003 Alexander County, Illinois    540    214  5042    NA\n3 17005 Bond County, Illinois         735     34 16627    NA\n4 17007 Boone County, Illinois       1011     71 53316    NA\n5 17009 Brown County, Illinois        724    119  6320    NA\n6 17011 Bureau County, Illinois       838     66 33027    NA\n\n\n\ncounty_wide &lt;- county_wide |&gt; \n  mutate(moe_pct = myvarM / myvarE * 100) |&gt; \n  mutate(reliability = case_when(\n    moe_pct &lt; 5  ~ \"High confidence\",\n    moe_pct &lt; 15 ~ \"Moderate\",\n    TRUE         ~ \"Low confidence\"\n  ))\n\nNow compare the average population of counties in each reliability category.\n\ncounty_wide |&gt; \n  group_by(reliability) |&gt; \n  summarize(\n    n_counties = n(),\n    avg_population = mean(popE)\n  )\n\n# A tibble: 3 × 3\n  reliability     n_counties avg_population\n  &lt;chr&gt;                &lt;int&gt;          &lt;dbl&gt;\n1 High confidence         38        299458.\n2 Low confidence          10          7787.\n3 Moderate                54         22877.\n\n\n[The average population of a “high confidence” county is about 299458, a “moderate confidence” county is about 22877, and a “low confidence” county is about 7787. This indicates that counties with lower average populations tend to have less reliable, or uncertain, data regarding median gross rent.]"
+  },
+  {
+    "objectID": "assignments/assignment2 .html#what-this-means-for-policy",
+    "href": "assignments/assignment2 .html#what-this-means-for-policy",
+    "title": "Assignment 2: Who Do We Know the Least About?",
+    "section": "What this means for policy",
+    "text": "What this means for policy\n\nWhich communities in your state do we know the least about? The counties in Illinois that we know the least about are Alexander, Brown, Gallatin, Hamilton, Hardin, Johnson, Massac, Menard, Pope, and Schuyler. All 10 of these counties are classified as “low confidence” reliability due to their large percentage of margin of error.\nWhy? The American Community Survey (ACS) is based on data that is sampled from the population, rather than surveying every single person like the Decennial Census. Counties with smaller populations will produce a smaller sample size, thus likely resulting in more uncertainty than a large county with a large sample size. When analyzing statistics, a smaller sample size will almost always have a larger margin of error than a larger sample size. This uncertainty is what causes these small counties to have “low confidence” reliability.\nWhat could go wrong? If a state agency were to allocate resources using this variable, they may over-allocate or under-allocate to any of the 10 “low confidence” counties. While over-allocating may waste limited resources and taxpayer dollars, under-allocating can leave many vulnerable people in need. Conversely, it is likely that their allocations for larger counties, which typically fall in the “high confidence” reliability due to their small margins of error, will be accurate. Treating every county’s number as equally certain is inherently unfair to small counties.\n\n[Upon learning how the ACS operates, I was naively shocked to find out that the data is extrapolated from a much smaller sample size, not the entire population. In my childhood, I imagined government workers going door to door with detailed paper surveys that they would then spend months logging into a large complex computer software. After Friday’s class, I found myself questioning the ethics of creating policy, even if it is positive, based off of data that may not be entirely comprehensive or representative of the people which whom it will affect. After completing this assignment, I am even further convinced that there must be another way to understand people, where they live, and how they live. I think that this is where I see community engagement operating most effectively. Bridging the gap between what is “data” and what is “reality”. Although data analytics can be excellent at analyzing large overarching trends, I think in some ways it fails to get as fine tuned as one would hope, at least regarding census data. As spatial analysts, we have a responsibility to understand and communicate not just the great potential of data analysis, but also it’s limits.]"
   }
 ]
