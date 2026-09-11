@@ -1,0 +1,97 @@
+---
+title: "Week 3: ggplot and MOEs"
+description: "My professor said it would be fun."
+date: 2026-09-11
+---
+
+## What We Did
+
+<!-- CHANGE THIS: replace with your own notes -->
+
+I learned how to create and stylize ggplots, and account for uncertainty using moe calculations. 
+
+## Key Concepts
+
+1. Asombe's quartet: Four different data visualizations with the same x and y mean. Plot is a mapping from coloumns in the the data to visual properties on the page. ("Grammar of Graphics") "GG". 
+
+2. ggplot translation
+  Data              ->          Page(Canvas)
+  estimate                      position on the y-axis
+  population                    position on the x-axis
+  reliability                   color 
+  moe                           size
+
+3. components of a ggplot 
+  a. ggplot(data) -> creates a blank canvas
+  b. aes...() aesthetic mappings: NO DECORATING, just business
+  c. geom_*(): the shape / type of chart 
+
+4. how to make a ggplot 
+  ggplot(tract_data) + 
+    aes(x = population, y = moe_pct) +
+    geompoint()
+    
+    insideaes()                       not inside
+    aes(color = reliability)          geom_point("blue")
+                                      decorations 
+    
+    example: ggplot(county_data) +
+             aes(x = estimate, y = population) +
+             geom_point(color = "blue")
+             
+            * look up R color codes 
+            
+    what I want to know               geom
+    how a variable is spread          geom_histogram()
+    how do two variables relate       geom_point()
+    how do groups compare             geom_boxplot() / geom_col()
+    how do things change over time    geom_line()
+    how uncertain is a value          geom_errorbars()
+    
+5. coefficent of variation (cv)
+  relative measure of sampling error
+  = (standard error / estimate) * 100 
+  
+  cv thresholds
+  low = 15% -> high reliability 
+  medium = 15% - 30% 
+  high = 30%+ -> high sampling error 
+             
+6. derived uncertainty
+  pov. rate = (# in poverty ± moe) / (total pop ± moe)
+  moe_sum -> adding estimates together 
+  moe_prop() -> one estimate as share of another
+  moe_ratio() -> (pop #) / (HH Income) 
+    *one is not a subset of another 
+    
+7. change over time 
+  a. compare non-overlapping intervals 
+    2019 - 2023 , 2018 - 2022 DOES NOT WORK 
+    2014 - 2018 , 2019 - 2023 DOES WORK 
+    
+    standard error of difference (SEdiff)
+ 
+    confidence interval of change
+      difference ± (1.645 * SEdiff)
+  
+  
+             
+## Proving R Works
+
+The chunk below runs when this page renders. If you can see a result underneath
+it on your published site, R and Quarto are talking to each other correctly.
+
+```{r}
+sessionInfo()$R.version$version.string
+```
+
+## Reflection
+
+<!-- CHANGE THIS: 3-4 sentences -->
+
+R is like excel level 100000. 
+
+## Questions I Still Have
+
+- 
+-

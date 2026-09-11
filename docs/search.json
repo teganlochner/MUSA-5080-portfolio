@@ -109,7 +109,7 @@
     "href": "weekly-notes/index.html",
     "title": "Weekly Notes",
     "section": "",
-    "text": "Notes from each week of MUSA 5080. New entries appear here automatically — add a .qmd file to this folder and render.\n\n\n\n\n\n\n\n\n\n\n\nWeek 2: dplyr\n\n\nAnalyzing and manipulating US Census data using dplyr.\n\n\n\n\n\nSep 4, 2026\n\n\n\n\n\n\n\nWeek 1: Getting Set Up\n\n\nFirst impressions, and getting the workflow running.\n\n\n\n\n\nAug 28, 2026\n\n\n\n\n\nNo matching items"
+    "text": "Notes from each week of MUSA 5080. New entries appear here automatically — add a .qmd file to this folder and render.\n\n\n\n\n\n\n\n\n\n\n\nWeek 3: ggplot and MOEs\n\n\nMy professor said it would be fun.\n\n\n\n\n\nSep 11, 2026\n\n\n\n\n\n\n\nWeek 2: dplyr\n\n\nAnalyzing and manipulating US Census data using dplyr.\n\n\n\n\n\nSep 4, 2026\n\n\n\n\n\n\n\nWeek 1: Getting Set Up\n\n\nFirst impressions, and getting the workflow running.\n\n\n\n\n\nAug 28, 2026\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "data/readme.html",
@@ -222,5 +222,47 @@
     "title": "Assignment 2: Who Do We Know the Least About?",
     "section": "What this means for policy",
     "text": "What this means for policy\n\nWhich communities in your state do we know the least about? The counties in Illinois that we know the least about are Alexander, Brown, Gallatin, Hamilton, Hardin, Johnson, Massac, Menard, Pope, and Schuyler. All 10 of these counties are classified as “low confidence” reliability due to their large percentage of margin of error.\nWhy? The American Community Survey (ACS) is based on data that is sampled from the population, rather than surveying every single person like the Decennial Census. Counties with smaller populations will produce a smaller sample size, thus likely resulting in more uncertainty than a large county with a large sample size. When analyzing statistics, a smaller sample size will almost always have a larger margin of error than a larger sample size. This uncertainty is what causes these small counties to have “low confidence” reliability.\nWhat could go wrong? If a state agency were to allocate resources using this variable, they may over-allocate or under-allocate to any of the 10 “low confidence” counties. While over-allocating may waste limited resources and taxpayer dollars, under-allocating can leave many vulnerable people in need. Conversely, it is likely that their allocations for larger counties, which typically fall in the “high confidence” reliability due to their small margins of error, will be accurate. Treating every county’s number as equally certain is inherently unfair to small counties.\n\n[Upon learning how the ACS operates, I was naively shocked to find out that the data is extrapolated from a much smaller sample size, not the entire population. In my childhood, I imagined government workers going door to door with detailed paper surveys that they would then spend months logging into a large complex computer software. After Friday’s class, I found myself questioning the ethics of creating policy, even if it is positive, based off of data that may not be entirely comprehensive or representative of the people which whom it will affect. After completing this assignment, I am even further convinced that there must be another way to understand people, where they live, and how they live. I think that this is where I see community engagement operating most effectively. Bridging the gap between what is “data” and what is “reality”. Although data analytics can be excellent at analyzing large overarching trends, I think in some ways it fails to get as fine tuned as one would hope, at least regarding census data. As spatial analysts, we have a responsibility to understand and communicate not just the great potential of data analysis, but also it’s limits.]"
+  },
+  {
+    "objectID": "weekly-notes/week-03.html",
+    "href": "weekly-notes/week-03.html",
+    "title": "Week 3: ggplot and MOEs",
+    "section": "",
+    "text": "I learned how to create and stylize ggplots, and account for uncertainty using moe calculations."
+  },
+  {
+    "objectID": "weekly-notes/week-03.html#what-we-did",
+    "href": "weekly-notes/week-03.html#what-we-did",
+    "title": "Week 3: ggplot and MOEs",
+    "section": "",
+    "text": "I learned how to create and stylize ggplots, and account for uncertainty using moe calculations."
+  },
+  {
+    "objectID": "weekly-notes/week-03.html#key-concepts",
+    "href": "weekly-notes/week-03.html#key-concepts",
+    "title": "Week 3: ggplot and MOEs",
+    "section": "Key Concepts",
+    "text": "Key Concepts\n\nAsombe’s quartet: Four different data visualizations with the same x and y mean. Plot is a mapping from coloumns in the the data to visual properties on the page. (“Grammar of Graphics”) “GG”.\nggplot translation Data -&gt; Page(Canvas) estimate position on the y-axis population position on the x-axis reliability color moe size\ncomponents of a ggplot\n\n\nggplot(data) -&gt; creates a blank canvas\naes…() aesthetic mappings: NO DECORATING, just business\ngeom_*(): the shape / type of chart\n\n\nhow to make a ggplot ggplot(tract_data) + aes(x = population, y = moe_pct) + geompoint()\ninsideaes() not inside aes(color = reliability) geom_point(“blue”) decorations\nexample: ggplot(county_data) + aes(x = estimate, y = population) + geom_point(color = “blue”)\n     * look up R color codes \nwhat I want to know geom how a variable is spread geom_histogram() how do two variables relate geom_point() how do groups compare geom_boxplot() / geom_col() how do things change over time geom_line() how uncertain is a value geom_errorbars()\ncoefficent of variation (cv) relative measure of sampling error = (standard error / estimate) * 100\n\ncv thresholds low = 15% -&gt; high reliability medium = 15% - 30% high = 30%+ -&gt; high sampling error\n\nderived uncertainty pov. rate = (# in poverty ± moe) / (total pop ± moe) moe_sum -&gt; adding estimates together moe_prop() -&gt; one estimate as share of another moe_ratio() -&gt; (pop #) / (HH Income) *one is not a subset of another\nchange over time\n\n\ncompare non-overlapping intervals 2019 - 2023 , 2018 - 2022 DOES NOT WORK 2014 - 2018 , 2019 - 2023 DOES WORK\n\nstandard error of difference (SEdiff)\n\nconfidence interval of change\n  difference ± (1.645 * SEdiff)"
+  },
+  {
+    "objectID": "weekly-notes/week-03.html#proving-r-works",
+    "href": "weekly-notes/week-03.html#proving-r-works",
+    "title": "Week 3: ggplot and MOEs",
+    "section": "Proving R Works",
+    "text": "Proving R Works\nThe chunk below runs when this page renders. If you can see a result underneath it on your published site, R and Quarto are talking to each other correctly.\n\nsessionInfo()$R.version$version.string\n\n[1] \"R version 4.6.1 (2026-06-24)\""
+  },
+  {
+    "objectID": "weekly-notes/week-03.html#reflection",
+    "href": "weekly-notes/week-03.html#reflection",
+    "title": "Week 3: ggplot and MOEs",
+    "section": "Reflection",
+    "text": "Reflection\n\nR is like excel level 100000."
+  },
+  {
+    "objectID": "weekly-notes/week-03.html#questions-i-still-have",
+    "href": "weekly-notes/week-03.html#questions-i-still-have",
+    "title": "Week 3: ggplot and MOEs",
+    "section": "Questions I Still Have",
+    "text": "Questions I Still Have"
   }
 ]
