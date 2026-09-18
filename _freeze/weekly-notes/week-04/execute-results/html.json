@@ -1,0 +1,15 @@
+{
+  "hash": "e045efb30dd729f6147ba9c78dd54152",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Week 4: Coordinate Systems and Map Projections\"\ndescription: \"It's the best.\"\ndate: 2026-09-18\n---\n\n## What We Did\n\n<!-- CHANGE THIS: replace with your own notes -->\n\nDiscuss the history, development, and applications for various coordinate reference systems. \n\n## Key Concepts\n\n1. GeoJoin\n  left join - filters through the data from the left table\n  inner join - filters through the data that both tables have in common\n  full join - joins all data, can leave many \"NA\" values\n  \n2. Geometry = TRUE\n  \"sticky\": comes with you everywhere, even if you don't want it. slows down operations, today we will learn how to drop it and bring it back to optimize workflows.\n  \n3. Coordinate Reference Systems (CRS)\n  *Datum and CRS are the same thing in reference to map projections\n  \n  History of CRS\n  Clark 1866  ->  Meades Ranch, KS            -> North American Datum of 1927 (NAD27)\n  GRS-80      ->  Earth Centered (satellites) -> NAD83\n  ??          ->  Earth Centered              -> WGS84: GPS Standard\n  State Plane ->  Coordinate System \n  UTM         ->  Measure from central \"origin\"\n\n  Geographic          vs.         Projected \n  units: degrees                  units: feet/meters\n  live on a sphere                good for local mapping/analysis \n  \n  Map projections can warp    ->        Best Projection for....\n  Shapes,                     ->        conformal conic \n  Areas,                      ->        equal area\n  Distance,                   ->        equal distance\n  Direction                   ->        mercator \n  SADD:( \n  \n  Three main families of map projections are cylindrical, conical, and planar \n  \n4. Key Commands\n  st_crs(data)      -> need to know units\n  st_set_crs()      -> adding the correct label \n  st_transform      -> change the coordinate system\n  st_filter()       -> count the tracts\n  st_intersection() -> shapes change -> more shapes \n  st_union()        -> everything \n  st_join(x,y)      -> behaves like left join \n  st_distance()     -> returns a matrix \n             \n## Proving R Works\n\nThe chunk below runs when this page renders. If you can see a result underneath\nit on your published site, R and Quarto are talking to each other correctly.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nsessionInfo()$R.version$version.string\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] \"R version 4.6.1 (2026-06-24)\"\n```\n\n\n:::\n:::\n\n\n## Reflection\n\n<!-- CHANGE THIS: 3-4 sentences -->\n\n## Questions I Still Have\n\nIs this better than arcGIS? Wow do they work together? Is it just a matter of preference?\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

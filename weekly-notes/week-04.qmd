@@ -1,0 +1,72 @@
+---
+title: "Week 4: Coordinate Systems and Map Projections"
+description: "It's the best."
+date: 2026-09-18
+---
+
+## What We Did
+
+<!-- CHANGE THIS: replace with your own notes -->
+
+Discuss the history, development, and applications for various coordinate reference systems. 
+
+## Key Concepts
+
+1. GeoJoin
+  left join - filters through the data from the left table
+  inner join - filters through the data that both tables have in common
+  full join - joins all data, can leave many "NA" values
+  
+2. Geometry = TRUE
+  "sticky": comes with you everywhere, even if you don't want it. slows down operations, today we will learn how to drop it and bring it back to optimize workflows.
+  
+3. Coordinate Reference Systems (CRS)
+  *Datum and CRS are the same thing in reference to map projections
+  
+  History of CRS
+  Clark 1866  ->  Meades Ranch, KS            -> North American Datum of 1927 (NAD27)
+  GRS-80      ->  Earth Centered (satellites) -> NAD83
+  ??          ->  Earth Centered              -> WGS84: GPS Standard
+  State Plane ->  Coordinate System 
+  UTM         ->  Measure from central "origin"
+
+  Geographic          vs.         Projected 
+  units: degrees                  units: feet/meters
+  live on a sphere                good for local mapping/analysis 
+  
+  Map projections can warp    ->        Best Projection for....
+  Shapes,                     ->        conformal conic 
+  Areas,                      ->        equal area
+  Distance,                   ->        equal distance
+  Direction                   ->        mercator 
+  SADD:( 
+  
+  Three main families of map projections are cylindrical, conical, and planar 
+  
+4. Key Commands
+  st_crs(data)      -> need to know units
+  st_set_crs()      -> adding the correct label 
+  st_transform      -> change the coordinate system
+  st_filter()       -> count the tracts
+  st_intersection() -> shapes change -> more shapes 
+  st_union()        -> everything 
+  st_join(x,y)      -> behaves like left join 
+  st_distance()     -> returns a matrix 
+             
+## Proving R Works
+
+The chunk below runs when this page renders. If you can see a result underneath
+it on your published site, R and Quarto are talking to each other correctly.
+
+```{r}
+sessionInfo()$R.version$version.string
+```
+
+## Reflection
+
+<!-- CHANGE THIS: 3-4 sentences -->
+
+## Questions I Still Have
+
+Is this better than arcGIS? Wow do they work together? Is it just a matter of preference?
+

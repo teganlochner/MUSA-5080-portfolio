@@ -109,7 +109,7 @@
     "href": "weekly-notes/index.html",
     "title": "Weekly Notes",
     "section": "",
-    "text": "Notes from each week of MUSA 5080. New entries appear here automatically — add a .qmd file to this folder and render.\n\n\n\n\n\n\n\n\n\n\n\nWeek 3: ggplot and MOEs\n\n\nMy professor said it would be fun.\n\n\n\n\n\nSep 11, 2026\n\n\n\n\n\n\n\nWeek 2: dplyr\n\n\nAnalyzing and manipulating US Census data using dplyr.\n\n\n\n\n\nSep 4, 2026\n\n\n\n\n\n\n\nWeek 1: Getting Set Up\n\n\nFirst impressions, and getting the workflow running.\n\n\n\n\n\nAug 28, 2026\n\n\n\n\n\nNo matching items"
+    "text": "Notes from each week of MUSA 5080. New entries appear here automatically — add a .qmd file to this folder and render.\n\n\n\n\n\n\n\n\n\n\n\nWeek 4: Coordinate Systems and Map Projections\n\n\nIt’s the best.\n\n\n\n\n\nSep 18, 2026\n\n\n\n\n\n\n\nWeek 3: ggplot and MOEs\n\n\nMy professor said it would be fun.\n\n\n\n\n\nSep 11, 2026\n\n\n\n\n\n\n\nWeek 2: dplyr\n\n\nAnalyzing and manipulating US Census data using dplyr.\n\n\n\n\n\nSep 4, 2026\n\n\n\n\n\n\n\nWeek 1: Getting Set Up\n\n\nFirst impressions, and getting the workflow running.\n\n\n\n\n\nAug 28, 2026\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "data/readme.html",
@@ -264,5 +264,47 @@
     "title": "Week 3: ggplot and MOEs",
     "section": "Questions I Still Have",
     "text": "Questions I Still Have"
+  },
+  {
+    "objectID": "weekly-notes/week-04.html",
+    "href": "weekly-notes/week-04.html",
+    "title": "Week 4: Coordinate Systems and Map Projections",
+    "section": "",
+    "text": "Discuss the history, development, and applications for various coordinate reference systems."
+  },
+  {
+    "objectID": "weekly-notes/week-04.html#what-we-did",
+    "href": "weekly-notes/week-04.html#what-we-did",
+    "title": "Week 4: Coordinate Systems and Map Projections",
+    "section": "",
+    "text": "Discuss the history, development, and applications for various coordinate reference systems."
+  },
+  {
+    "objectID": "weekly-notes/week-04.html#key-concepts",
+    "href": "weekly-notes/week-04.html#key-concepts",
+    "title": "Week 4: Coordinate Systems and Map Projections",
+    "section": "Key Concepts",
+    "text": "Key Concepts\n\nGeoJoin left join - filters through the data from the left table inner join - filters through the data that both tables have in common full join - joins all data, can leave many “NA” values\nGeometry = TRUE “sticky”: comes with you everywhere, even if you don’t want it. slows down operations, today we will learn how to drop it and bring it back to optimize workflows.\nCoordinate Reference Systems (CRS) *Datum and CRS are the same thing in reference to map projections\n\nHistory of CRS Clark 1866 -&gt; Meades Ranch, KS -&gt; North American Datum of 1927 (NAD27) GRS-80 -&gt; Earth Centered (satellites) -&gt; NAD83 ?? -&gt; Earth Centered -&gt; WGS84: GPS Standard State Plane -&gt; Coordinate System UTM -&gt; Measure from central “origin”\nGeographic vs. Projected units: degrees units: feet/meters live on a sphere good for local mapping/analysis\nMap projections can warp -&gt; Best Projection for…. Shapes, -&gt; conformal conic Areas, -&gt; equal area Distance, -&gt; equal distance Direction -&gt; mercator SADD:(\nThree main families of map projections are cylindrical, conical, and planar\n\nKey Commands st_crs(data) -&gt; need to know units st_set_crs() -&gt; adding the correct label st_transform -&gt; change the coordinate system st_filter() -&gt; count the tracts st_intersection() -&gt; shapes change -&gt; more shapes st_union() -&gt; everything st_join(x,y) -&gt; behaves like left join st_distance() -&gt; returns a matrix"
+  },
+  {
+    "objectID": "weekly-notes/week-04.html#proving-r-works",
+    "href": "weekly-notes/week-04.html#proving-r-works",
+    "title": "Week 4: Coordinate Systems and Map Projections",
+    "section": "Proving R Works",
+    "text": "Proving R Works\nThe chunk below runs when this page renders. If you can see a result underneath it on your published site, R and Quarto are talking to each other correctly.\n\nsessionInfo()$R.version$version.string\n\n[1] \"R version 4.6.1 (2026-06-24)\""
+  },
+  {
+    "objectID": "weekly-notes/week-04.html#reflection",
+    "href": "weekly-notes/week-04.html#reflection",
+    "title": "Week 4: Coordinate Systems and Map Projections",
+    "section": "Reflection",
+    "text": "Reflection"
+  },
+  {
+    "objectID": "weekly-notes/week-04.html#questions-i-still-have",
+    "href": "weekly-notes/week-04.html#questions-i-still-have",
+    "title": "Week 4: Coordinate Systems and Map Projections",
+    "section": "Questions I Still Have",
+    "text": "Questions I Still Have\nIs this better than arcGIS? Wow do they work together? Is it just a matter of preference?"
   }
 ]
