@@ -1,0 +1,346 @@
+---
+title: "Verify the Claim: New Census figures on Philly neighborhoods show inequality, high numbers of whites living in poverty"
+author: "Tegan Lochner"
+date: today
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-summary: "Show code"
+    embed-resources: true
+---
+
+#Part 1 — Reconstruct (roughly 1–2 paragraphs plus code)
+#Pull the ACS data the article appears to rely on. Document:
+
+#Which variable(s) you used and why. Include the variable code.
+
+Variables Used
+
+B17001_001E : total population for whom poverty status is determined - This will be used to determine the poverty rate. Using *B01003_001E : total population* would not be accurate because the ACS excludes some people from their poverty rate calculation if they are determined inapplicable. 
+
+B17001_002E : total population below the poverty level - This will be used to determine the poverty rate. Dividing the total population below the poverty level by the total population applicable will give me the poverty rate. 
+
+B17001_001M : MOE for the total - The margin of error will allow me to determine the certainity of the statistical outcome.
+
+B17001_002M : MOE for below poverty - The margin of error will allow me to determine the certainty of the statistical outcome. 
+
+#Which years and survey (acs5 vs acs1) you used and why.
+
+I am used the 2006-2010 ACS5 survey data to represent the 2010 data mentioned in the article, and the 2013-2017 ACS5 survey data to represent the 2017 data mentioned in the article. Although the article mentions some data from the 2016 ACS1 report, it's main claim compares the change in the poverty rate from 2010 to 2017. 
+
+#What you had to assume, because the article does not say.
+
+I assumed that the article correctly calculated the poverty rate by using "total population for whom poverty status is determined" rather than just "total population". I myself did not realize that this is the correct way to calculate the poverty rate before reading this on the US Census Bureau website. 
+
+#State clearly whether the two periods the article compares overlap. If they do, say what that means for any conclusion drawn from the comparison.
+
+No, the two periods do not overlap.  
+
+#Part 2 — Test (code plus interpretation)
+#For each tract:
+
+#Data set up
+
+library (tidycensus)
+library(tidyverse)
+
+vars <- (
+total = "B17001_001",
+below = "B17001_002"
+)
+
+acs_2010 <- get_acs(
+  geography = "tract",
+  variables = vars,
+  state = "PA",
+  county = "Philadelphia",
+  year = 2010,
+  survey = "acs5",
+  output ="wide"
+)
+
+acs_2017 <- get_acs(
+  geography = "tract",
+  variables = vars,
+  state = "PA",
+  county = "Philadelphia",
+  year = 2017,
+  survey = "acs5",
+  output = "wide"
+)
+
+#Compute the poverty rate (or whatever variable you are using if you found your own article) and its margin of error. Use moe_prop() — a rate is a proportion, and the MOE does not carry over from the count.
+
+#poverty rate
+acs_2010 <- mutate(acs_2010, poverty_rt = belowE / totalE)
+acs_2017 <- mutate(acs_2017, poverty_rt = belowE / totalE)
+
+#margin of error 
+acs_2010 <- mutate(acs_2010, poverty_moe = moe_prop(
+  belowE,
+  totalE,
+  belowM,
+  totalM
+))
+
+acs_2017 <- mutate(acs_2017, poverty_moe = moe_prop(
+  belowE,
+  totalE,
+  belowM,
+  totalM
+))
+
+# ============================================================
+# FIGURE 2
+# Distribution of Poverty Rates: 2010 vs. 2017
+# ============================================================
+
+poverty_long <- poverty_change |>
+  select(
+    GEOID,
+    poverty_rt_2010,
+    poverty_rt_2017
+  ) |>
+  pivot_longer(
+    cols = c(poverty_rt_2010, poverty_rt_2017),
+    names_to = "year",
+    values_to = "poverty_rate"
+  ) |>
+  mutate(
+    year = recode(
+      year,
+      poverty_rt_2010 = "2010",
+      poverty_rt_2017 = "2017"
+    ),
+    poverty_rate = poverty_rate * 100
+  )
+
+figure_2 <- ggplot(
+  poverty_long,
+  aes(
+    x = year,
+    y = poverty_rate,
+    fill = year
+  )
+) +
+  geom_boxplot(
+    alpha = 0.75,
+    width = 0.6,
+    outlier.alpha = 0.35
+  ) +
+  labs(
+    title = "Distribution of Philadelphia Census Tract Poverty Rates",
+    subtitle = "Comparison of ACS 5-Year estimates for 2010 and 2017",
+    x = "Period",
+    y = "Poverty rate (%)",
+    fill = "Period",
+    caption = paste(
+      "Source: U.S. Census Bureau, ACS 5-Year Estimates.",
+      "Poverty rate = population below poverty level /",
+      "population for whom poverty status is determined."
+    )
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    panel.grid.minor = element_blank()
+  )
+
+figure_2
+
+
+#Compute the coefficient of variation
+acs_2010 <- mutate(acs_2010, poverty_cv = ((poverty_moe / 1.645) / poverty_rt) * 100)
+acs_2017 <- mutate(acs_2017, poverty_cv = ((poverty_moe / 1.645) / poverty_rt) * 100)
+
+#flag reliability using the Jurjevich et al. (2018) thresholds: CV < 12% reliable, 12–40% somewhat reliable, > 40% unreliable.
+reliability_table_2010 <- acs_2010 |> 
+  mutate(
+    dot = case_when(
+      is.na(poverty_cv) ~ NA_character_,
+      poverty_cv < 12 ~ "🟢",
+      poverty_cv <= 40 ~ "🟡",
+      TRUE ~ "🔴"
+    ),
+    flag = case_when(
+      is.na(poverty_cv) ~ NA_character_,
+      poverty_cv < 12 ~ "Reliable",
+      poverty_cv <= 40 ~ "Somewhat reliable",
+      TRUE ~ "Unreliable"
+    )
+  )
+
+reliability_table_2017 <- acs_2017 |> 
+  mutate(
+    dot = case_when(
+      is.na(poverty_cv) ~ NA_character_,
+      poverty_cv < 12 ~ "🟢",
+      poverty_cv <= 40 ~ "🟡",
+      TRUE ~ "🔴"
+    ),
+    flag = case_when(
+      is.na(poverty_cv) ~ NA_character_,
+      poverty_cv < 12 ~ "Reliable",
+      poverty_cv <= 40 ~ "Somewhat reliable",
+      TRUE ~ "Unreliable"
+    )
+  )
+  
+#Compute the change between the two periods and the margin of error of that change.
+
+poverty_change <- acs_2010 |> 
+  select(GEOID, NAME, poverty_rt_2010 = poverty_rt, poverty_moe_2010 = poverty_moe) |> 
+  left_join( acs_2017 |> 
+  select(GEOID, poverty_rt_2017 = poverty_rt, poverty_moe_2017 = poverty_moe),
+  by = "GEOID")
+  
+poverty_change <- poverty_change |> 
+  mutate(poverty_change = poverty_rt_2017 - poverty_rt_2010)
+  
+poverty_change <- poverty_change |> 
+mutate(
+  se_2010 = poverty_moe_2010 / 1.645,
+  se_2017 = poverty_moe_2017 / 1.645,
+  se_change = sqrt(se_2010^2 + se_2017^2),
+  change_moe = 1.645 * se_change
+)
+  
+head(poverty_change)
+
+library(gt)
+library(scales)
+
+# ------------------------------------------------------------
+# FIGURE 1
+# Change in poverty rate with 90% margin of error
+# ------------------------------------------------------------
+
+error_bar_data <- poverty_change |>
+  filter(
+    !is.na(poverty_change),
+    !is.na(change_moe)
+  ) |>
+  arrange(poverty_change) |>
+  mutate(
+    tract_order = row_number()
+  )
+
+figure_1 <- ggplot(
+  error_bar_data,
+  aes(
+    x = tract_order,
+    y = poverty_change * 100
+  )
+) +
+  geom_hline(
+    yintercept = 0,
+    linetype = "dashed",
+    color = "black",
+    linewidth = 0.7
+  ) +
+  geom_errorbar(
+    aes(
+      ymin = (poverty_change - change_moe) * 100,
+      ymax = (poverty_change + change_moe) * 100
+    ),
+    width = 0,
+    alpha = 0.35,
+    color = "gray40"
+  ) +
+  geom_point(
+    size = 1.5,
+    alpha = 0.7,
+    color = "steelblue"
+  ) +
+  labs(
+    title = "Change in Poverty Rates Across Philadelphia Census Tracts",
+    subtitle = "2017 minus 2010 poverty rate; points show estimates and bars show 90% margins of error",
+    x = "Philadelphia census tracts, ordered by estimated change",
+    y = "Change in poverty rate (percentage points)",
+    caption = "Source: U.S. Census Bureau, ACS 5-Year Estimates (2006–2010 and 2013–2017)."
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+figure_1
+
+
+#Test whether the change is statistically distinguishable from zero at 90% confidence.
+
+poverty_change <- poverty_change |> 
+  mutate(
+  lower = poverty_change - change_moe,
+  upper = poverty_change + change_moe,
+  significant_90 = lower > 0 | upper < 0
+)
+
+#Report how many tracts show a statistically detectable change and how many do not.
+
+table(poverty_change$significant_90)
+
+FALSE: 313
+There are 313 tracts without statistically detectable change.
+
+TRUE: 63
+There are 63 tracts with statistically detectable change. 
+
+#Handle your missing values deliberately. Some tracts will produce NA. Find out why before you decide what to do about them, and say what you decided and why (often areas of no population like airports)
+
+poverty_change |> 
+  filter(is.na(significant_90)) |> 
+  select(GEOID, NAME)
+  
+These tracts have missing values: 
+50 : Philadelphia Navy Yard
+9803 : NA
+9804 : Philadelphia International Airport
+9805 : NA
+9806 : Stadiums / Commercial Area
+9807 : Stadiums / Commercial Area
+9808 : NA
+9809 : Philadelphia International Airport
+
+
+#Part 3 — Adjudicate (roughly 2 paragraphs)
+#Sort the article’s claims into three buckets:
+
+#Supported — the data backs this up.
+
+- some neighborhoods in Philadelphia have increased poverty rates from 2010 to 2017
+
+#Not supported — the data contradicts it, or the apparent effect is not distinguishable from noise.
+
+#Cannot be determined — answering would require data or methodological detail the article does not provide and you cannot recover.
+
+- still not recovered from the great recession 
+- people in low income areas are not looking for jobs 
+- people living in poverty becoming even poorer
+- some neighborhoods have become destinations for impoverished households to move into 
+- families are coming from the Dominican Republic, Puerto Rico, and Mexico. Kids skip meals, live overcrowded, people sell drugs on every corner. David Chiles, exec director of Providence Center
+- 50 percent or more (of people in poverty) below the federal poverty rate of about $21,000 a year for a family of three
+- In September, the census released a one-year survey that found that while poverty among minority groups stalled or decreased, poverty among white people in Philadelphia shot up from 14.8 percent to 19.4 percent between 2016 and 2017
+- the poverty rates in 22 majority-white neighborhoods in Philadelphia increased between the 2006-10 survey and the 2013-17 survey  — in some cases quite dramatically
+- Many residents who were barely holding on have blown through their savings, lost access to social-network programs, and are living at rock bottom. Tricia Neale,m minister and exec director at Feast of Justice
+- increased opioid addictions are leading to increased white poverty. Revonne Watson, food pantry director at Homecrest Homes. Paul Sachs, exec director of Merakey Philadelphia. 
+- increased poverty rates are caused by people retiring and staying in a neighborhood. White immigrants from Russia. Andre Krug, CEo of KleinLife
+- high rate of evictions in West Philadelphia are pushing people to Eastwick. growing number of low-income immigrants from africa are affecting poverty rates. Kathy Fisher, policy director at Greater Philadelphia Coalition Against Hunger
+- large african population. Andrea Lemoins, community organizer at Free Library of Philadelphia's Eastwick 
+
+largely claims based on anecdotal evidence. When placed next to census data it appears that the claims are being backed by statistical analysis when they are not. The article actually admits to potential lack of evidence in the data but then proceeds to structure the article in this way anyway. "The ACS numbers are calculated by surveys taken over five-year periods. They’re based on samples of population and are subject to margins of error.
+But, experts say, the results are striking all the same." "Along with the tragedy of Fairhill and the travails of white, low-income Philadelphians, the Five-Year ACS had another story to tell: the poverty slide in Eastwick.
+With no time to study the data, experts were hard-pressed to explain why the poverty rate spiked in that particular neighborhood, which looks like a combination of Northeast Philadelphia, a widespread suburb, and an inner-city community."
+
+#Be specific!!
+
+#Part 4 — Rewrite (150 words maximum)
+
+Original: "In grim and startling detail, a new five-year federal survey of poverty in Philadelphia shows a city still not recovered from the Great Recession — with white poverty exploding, inequality becoming the norm, and an out-of-the-way neighborhood experiencing some of the worst ravages of privation.
+Being released on Thursday, the U.S. Census Bureau‘s American Community Survey (ACS) Five-Year Estimate for 2013 through 2017 takes a microscope to the city’s formidable 26 percent poverty rate, revealing fault lines of distress and hardship."
+
+
+#Rewrite the article’s central paragraph so that it is defensible given what you found. Keep it readable — this is for a general audience, not a methods section. You may not simply add a disclaimer; the rewrite should say something substantive and true.
