@@ -109,7 +109,7 @@
     "href": "weekly-notes/index.html",
     "title": "Weekly Notes",
     "section": "",
-    "text": "Notes from each week of MUSA 5080. New entries appear here automatically — add a .qmd file to this folder and render.\n\n\n\n\n\n\n\n\n\n\n\nWeek 4: Coordinate Systems and Map Projections\n\n\nIt’s the best.\n\n\n\n\n\nSep 18, 2026\n\n\n\n\n\n\n\nWeek 3: ggplot and MOEs\n\n\nMy professor said it would be fun.\n\n\n\n\n\nSep 11, 2026\n\n\n\n\n\n\n\nWeek 2: dplyr\n\n\nAnalyzing and manipulating US Census data using dplyr.\n\n\n\n\n\nSep 4, 2026\n\n\n\n\n\n\n\nWeek 1: Getting Set Up\n\n\nFirst impressions, and getting the workflow running.\n\n\n\n\n\nAug 28, 2026\n\n\n\n\n\nNo matching items"
+    "text": "Notes from each week of MUSA 5080. New entries appear here automatically — add a .qmd file to this folder and render.\n\n\n\n\n\n\n\n\n\n\n\nWeek 5: Machine Learning\n\n\nlike sure\n\n\n\n\n\nSep 25, 2026\n\n\n\n\n\n\n\nWeek 4: Coordinate Systems and Map Projections\n\n\nIt’s the best.\n\n\n\n\n\nSep 18, 2026\n\n\n\n\n\n\n\nWeek 3: ggplot and MOEs\n\n\nMy professor said it would be fun.\n\n\n\n\n\nSep 11, 2026\n\n\n\n\n\n\n\nWeek 2: dplyr\n\n\nAnalyzing and manipulating US Census data using dplyr.\n\n\n\n\n\nSep 4, 2026\n\n\n\n\n\n\n\nWeek 1: Getting Set Up\n\n\nFirst impressions, and getting the workflow running.\n\n\n\n\n\nAug 28, 2026\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "data/readme.html",
@@ -390,5 +390,47 @@
     "title": "Week 4 Lab: Who Does Indego Reach?",
     "section": "If you’re curious",
     "text": "If you’re curious\n\nIndego stations have a totalDocks property. Does “access” mean the same thing next to a 10-dock station and a 35-dock station?\nReplace the centroid with st_point_on_surface(). Does any tract’s distance change a lot? Why might a centroid fall in an odd place for some tract shapes?\nStraight-line distance ignores the Schuylkill, I-95, and rail yards. Which tracts do you suspect are farther in practice than your map shows?"
+  },
+  {
+    "objectID": "weekly-notes/week-05.html",
+    "href": "weekly-notes/week-05.html",
+    "title": "Week 5: Machine Learning",
+    "section": "",
+    "text": "Ex: Where do rents exceed our expectations y = f(x) + e y = rent function is unknown e = everything else\nm1 &lt;- lm(med_rent ~ med_inc, data = tracts) summary(m1) (intercept) med.inc estimate: 690.0 0.0081 standard error, SE: 38.0 0.0005 t-value: 18.2 16.2 p-value: &lt;2e-16 &lt;2e-16"
+  },
+  {
+    "objectID": "weekly-notes/week-05.html#what-we-did",
+    "href": "weekly-notes/week-05.html#what-we-did",
+    "title": "Week 5: Machine Learning",
+    "section": "",
+    "text": "Ex: Where do rents exceed our expectations y = f(x) + e y = rent function is unknown e = everything else\nm1 &lt;- lm(med_rent ~ med_inc, data = tracts) summary(m1) (intercept) med.inc estimate: 690.0 0.0081 standard error, SE: 38.0 0.0005 t-value: 18.2 16.2 p-value: &lt;2e-16 &lt;2e-16"
+  },
+  {
+    "objectID": "weekly-notes/week-05.html#key-concepts",
+    "href": "weekly-notes/week-05.html#key-concepts",
+    "title": "Week 5: Machine Learning",
+    "section": "Key Concepts",
+    "text": "Key Concepts\n\nits a spectrum rigid &lt;——————————————————————————–&gt; flexible linear lasso/ridge logistic regression trees random forest boosting neural networks\n\nparametric: assume a functional form, only need to know y intercept and slope non-parametric: wiggly, lots of things to estimate\n\nthe line gap between observed and predicted is the residual/error least squares - minimize sum for squared errors noise in Y goes into the residuals (not noise) noise in x tends to flatten the slope\nfit vs. prediction R^2 - on the data it was fit to test/train - 80% of data for training, 20% of data for test RMSE -&gt; lower is better!\ncross validation (new CV) k-fold -&gt; 5 fold for 100 records break data up into groups of 20, take turn training vs testing each group overfitting - learn the noise\nhow to pick features multicollinearity -&gt; mostly harmless for this application, but check plotted residuals chould look random -&gt; homoskedastic heteroskedastic: shows a pattern -&gt; indication that something is missing from the model"
+  },
+  {
+    "objectID": "weekly-notes/week-05.html#proving-r-works",
+    "href": "weekly-notes/week-05.html#proving-r-works",
+    "title": "Week 5: Machine Learning",
+    "section": "Proving R Works",
+    "text": "Proving R Works\nThe chunk below runs when this page renders. If you can see a result underneath it on your published site, R and Quarto are talking to each other correctly.\n\nsessionInfo()$R.version$version.string\n\n[1] \"R version 4.6.1 (2026-06-24)\""
+  },
+  {
+    "objectID": "weekly-notes/week-05.html#reflection",
+    "href": "weekly-notes/week-05.html#reflection",
+    "title": "Week 5: Machine Learning",
+    "section": "Reflection",
+    "text": "Reflection"
+  },
+  {
+    "objectID": "weekly-notes/week-05.html#questions-i-still-have",
+    "href": "weekly-notes/week-05.html#questions-i-still-have",
+    "title": "Week 5: Machine Learning",
+    "section": "Questions I Still Have",
+    "text": "Questions I Still Have"
   }
 ]

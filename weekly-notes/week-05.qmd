@@ -1,0 +1,75 @@
+---
+title: "Week 5: Machine Learning "
+description: "like sure"
+date: 2026-09-25
+---
+
+## What We Did
+
+<!-- CHANGE THIS: replace with your own notes -->
+
+Ex: Where do rents exceed our expectations 
+  y = f(x) + e
+  y = rent 
+  function is unknown
+  e = everything else 
+  
+  m1 <- lm(med_rent ~ med_inc, data = tracts)
+  summary(m1)
+              (intercept)             med.inc
+    estimate: 690.0                   0.0081
+    standard error, SE: 38.0          0.0005
+    t-value:  18.2                    16.2
+    p-value:  <2e-16                  <2e-16
+    
+    
+
+## Key Concepts
+
+1. its a spectrum 
+  rigid <--------------------------------------------------------------------------------> flexible 
+  linear    lasso/ridge   logistic regression   trees   random forest   boosting    neural networks 
+  
+  parametric: assume a functional form, only need to know y intercept and slope
+  non-parametric: wiggly, lots of things to estimate
+  
+2. the line
+  gap between observed and predicted is the residual/error 
+  least squares - minimize sum for squared errors
+  noise in Y goes into the residuals (not noise)
+  noise in x tends to flatten the slope 
+  
+3. fit vs. prediction
+  R^2 - on the data it was fit to 
+  test/train - 80% of data for training, 20% of data for test
+  RMSE -> lower is better!
+  
+4. cross validation (new CV)
+  k-fold -> 5 fold for 100 records
+  break data up into groups of 20, take turn training vs testing each group 
+  overfitting - learn the noise
+  
+5. how to pick features 
+  multicollinearity -> mostly harmless for this application, but check 
+  plotted residuals chould look random -> homoskedastic 
+  heteroskedastic: shows a pattern -> indication that something is missing from the model
+  
+  
+
+## Proving R Works
+
+The chunk below runs when this page renders. If you can see a result underneath
+it on your published site, R and Quarto are talking to each other correctly.
+
+```{r}
+sessionInfo()$R.version$version.string
+```
+
+## Reflection
+
+<!-- CHANGE THIS: 3-4 sentences -->
+
+## Questions I Still Have
+
+
+

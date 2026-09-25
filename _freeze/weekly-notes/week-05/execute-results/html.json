@@ -1,0 +1,15 @@
+{
+  "hash": "f762953b50245887558d9320923b7dc8",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Week 5: Machine Learning \"\ndescription: \"like sure\"\ndate: 2026-09-25\n---\n\n## What We Did\n\n<!-- CHANGE THIS: replace with your own notes -->\n\nEx: Where do rents exceed our expectations \n  y = f(x) + e\n  y = rent \n  function is unknown\n  e = everything else \n  \n  m1 <- lm(med_rent ~ med_inc, data = tracts)\n  summary(m1)\n              (intercept)             med.inc\n    estimate: 690.0                   0.0081\n    standard error, SE: 38.0          0.0005\n    t-value:  18.2                    16.2\n    p-value:  <2e-16                  <2e-16\n    \n    \n\n## Key Concepts\n\n1. its a spectrum \n  rigid <--------------------------------------------------------------------------------> flexible \n  linear    lasso/ridge   logistic regression   trees   random forest   boosting    neural networks \n  \n  parametric: assume a functional form, only need to know y intercept and slope\n  non-parametric: wiggly, lots of things to estimate\n  \n2. the line\n  gap between observed and predicted is the residual/error \n  least squares - minimize sum for squared errors\n  noise in Y goes into the residuals (not noise)\n  noise in x tends to flatten the slope \n  \n3. fit vs. prediction\n  R^2 - on the data it was fit to \n  test/train - 80% of data for training, 20% of data for test\n  RMSE -> lower is better!\n  \n4. cross validation (new CV)\n  k-fold -> 5 fold for 100 records\n  break data up into groups of 20, take turn training vs testing each group \n  overfitting - learn the noise\n  \n5. how to pick features \n  multicollinearity -> mostly harmless for this application, but check \n  plotted residuals chould look random -> homoskedastic \n  heteroskedastic: shows a pattern -> indication that something is missing from the model\n  \n  \n\n## Proving R Works\n\nThe chunk below runs when this page renders. If you can see a result underneath\nit on your published site, R and Quarto are talking to each other correctly.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nsessionInfo()$R.version$version.string\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] \"R version 4.6.1 (2026-06-24)\"\n```\n\n\n:::\n:::\n\n\n## Reflection\n\n<!-- CHANGE THIS: 3-4 sentences -->\n\n## Questions I Still Have\n\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
