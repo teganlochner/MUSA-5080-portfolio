@@ -15,7 +15,7 @@ The first part of the lab (Parts 0–7) is guided and builds your toolkit. **Typ
 
 > **The question:** A housing agency wants an *expected* rent for every Philadelphia tract, so it can flag tracts where rents run well above what we'd expect given who lives there.
 >
-> Is that a β̂ problem or a ŷ problem? Write your answer here before you start: ___
+> Is that a β̂ problem or a ŷ problem? Write your answer here before you start:ˆy_
 
 ---
 
@@ -61,19 +61,19 @@ philly_tracts <- get_acs(
   output = "wide",
   geometry = TRUE
 ) %>%
-  st_transform(___)          # Pennsylvania South State Plane, feet
+  st_transform("EPSG:2272")          # Pennsylvania South State Plane, feet
 ```
 
 Now build the variables. **A data frame goes in, a data frame comes out.**
 
 ```{r}
 #| label: build-vars
-philly_tracts <- philly_tracts %>%
+philly_tracts <- philly_tracts %>% 
   mutate(
     pct_renter = renter_occE / occ_unitsE * 100,
-    pct_ba     = (baE + maE + profE + phdE) / ___ * 100,
+    pct_ba     = (baE + maE + profE + phdE) / edu_totalE * 100,
     rent_se    = med_rentM / 1.645,
-    rent_cv    = rent_se / ___ * 100
+    rent_cv    = rent_se / med_rentE * 100
   )
 ```
 
@@ -85,7 +85,7 @@ stations <- st_read("https://www.rideindego.com/stations/json/", quiet = TRUE) %
   st_transform(st_crs(philly_tracts))
 
 philly_tracts <- philly_tracts %>%
-  mutate(n_stations = lengths(st_is_within_distance(., stations, dist = ___)))
+  mutate(n_stations = lengths(st_is_within_distance(., stations, dist = 2640)))
 ```
 
 **Stop and look:** `st_is_within_distance()` returns a list, one element per tract, holding the stations within range. What does `lengths()` do to that list?
@@ -101,14 +101,14 @@ nrow(philly_tracts)
 tracts <- philly_tracts %>%
   filter(total_popE > 0,
          !is.na(med_rentE),
-         !is.na(___),
+         !is.na(med_incE),
          !is.na(pct_ba),
          !is.na(pct_renter))
 
 nrow(tracts)
 ```
 
-**Rule from Week 4, again:** how many tracts did you lose? Which kind of tract has no median rent? (Hint: think about who lives there.)
+**Rule from Week 4, again:** how many tracts did you lose? Which kind of tract has no median rent? (Hint: think about who lives there.) lost 31 tracts
 
 ---
 
@@ -118,7 +118,7 @@ The Week 3 habit comes first: plot the relationship before you fit anything.
 
 ```{r}
 #| label: scatter
-ggplot(tracts, aes(x = ___, y = med_rentE)) +
+ggplot(tracts, aes(x = med_incE, y = med_rentE)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE, color = "red") +
   scale_x_continuous(labels = scales::dollar) +
@@ -128,7 +128,7 @@ ggplot(tracts, aes(x = ___, y = med_rentE)) +
   theme_minimal()
 ```
 
-**Stop and look:** Does a straight line describe this cloud well everywhere, or does it bend? Where are the points that sit far from the line?
+**Stop and look:** Does a straight line describe this cloud well everywhere, or does it bend? Where are the points that sit far from the line? yes, it is straight. high rent low income, and high income low rent 
 
 ---
 
@@ -144,12 +144,12 @@ summary(m1)
 
 ```{r}
 #| label: translate
-coef(m1)["med_incE"] * ___    # predicted rent change for +$10,000 of income
+coef(m1)["med_incE"] * 10000    # predicted rent change for +$10,000 of income
 ```
 
-Write one sentence: "A tract with $10,000 more in median income has a predicted rent about $___ higher per month."
+Write one sentence: "A tract with $10,000 more in median income has a predicted rent about $80.22 higher per month."
 
-**Stop and look:** The p-value is tiny. Does that tell you whether $___/month is a big effect? What would you need to know to decide?
+**Stop and look:** The p-value is tiny. Does that tell you whether $80.22/month is a big effect? What would you need to know to decide? it is stastically significant but we need to know the residual to decide 
 
 ---
 
@@ -159,7 +159,7 @@ Add the other predictors.
 
 ```{r}
 #| label: m2
-m2 <- lm(med_rentE ~ med_incE + pct_renter + pct_ba + ___, data = tracts)
+m2 <- lm(med_rentE ~ med_incE + pct_renter + pct_ba + n_stations, data = tracts)
 summary(m2)
 ```
 
@@ -167,11 +167,11 @@ Look at the `n_stations` coefficient. Answer both questions in one or two senten
 
 1. **β̂ reading:** Can you tell the housing agency that bike share stations raise rents? Why or why not?
 
-   *Your answer:*
+   *Your answer:* no, correlation does not equal causation
 
 2. **ŷ reading:** Should `n_stations` stay in a model whose only job is predicting rent? Why or why not?
 
-   *Your answer:*
+   *Your answer:* cannot be determined at the moment 
 
 ::: {.callout-note}
 ## Same number, two questions
@@ -183,7 +183,7 @@ One more check. Compare in-sample fit:
 ```{r}
 #| label: r2
 summary(m1)$r.squared
-summary(m2)$___
+summary(m2)$r.squared
 ```
 
 Hold on to these numbers. Part 6 asks whether they mean what they seem to.
@@ -198,7 +198,7 @@ Our Y is an ACS estimate with its own margin of error. Add the residuals to the 
 #| label: fog
 tracts <- tracts %>%
   mutate(fitted_m2 = fitted(m2),
-         resid_m2  = residuals(___))
+         resid_m2  = residuals(m2))
 
 ggplot(tracts, aes(x = rent_cv, y = abs(resid_m2))) +
   geom_point(alpha = 0.5) +
@@ -209,7 +209,7 @@ ggplot(tracts, aes(x = rent_cv, y = abs(resid_m2))) +
   theme_minimal()
 ```
 
-**Stop and look:** If a tract's rent estimate has a CV of 35%, how much of the model's miss there could be survey noise rather than a model failure? What does that mean for flagging "tracts with rents above expectation"?
+**Stop and look:** If a tract's rent estimate has a CV of 35%, how much of the model's miss there could be survey noise rather than a model failure? What does that mean for flagging "tracts with rents above expectation"? the model could miss $250, unreliable within $250 less or more than the expected rent 
 
 ---
 
@@ -231,12 +231,12 @@ n <- nrow(tracts)
 train_idx <- sample(1:n, size = 0.8 * n)
 
 train_data <- tracts[train_idx, ]
-test_data  <- tracts[___, ]
+test_data  <- tracts[-train_idx, ]
 
 m2_train <- lm(med_rentE ~ med_incE + pct_renter + pct_ba + n_stations,
                data = train_data)
 
-test_pred <- predict(m2_train, newdata = ___)
+test_pred <- predict(m2_train, newdata = test_data)
 
 rmse_train <- sqrt(mean(residuals(m2_train)^2))
 rmse_test  <- sqrt(mean((test_data$med_rentE - test_pred)^2))
@@ -244,7 +244,7 @@ rmse_test  <- sqrt(mean((test_data$med_rentE - test_pred)^2))
 c(train = rmse_train, test = rmse_test)
 ```
 
-**Stop and look:** Which RMSE is larger? Why would you expect that? In words: "The model's typical miss on tracts it hasn't seen is about $___ per month."
+**Stop and look:** Which RMSE is larger? test is larger. Why would you expect that? In words: "The model's typical miss on tracts it hasn't seen is about $265 per month."
 
 Change the seed to any other number and rerun the chunk. Did the test RMSE change? That's why one split isn't enough.
 
@@ -256,7 +256,7 @@ Change the seed to any other number and rerun the chunk. Did the test RMSE chang
 #| label: cv
 model_df <- tracts %>% st_drop_geometry()
 
-ctrl <- trainControl(method = "cv", number = ___)
+ctrl <- trainControl(method = "cv", number = 5)
 
 set.seed(5080)
 cv_m1 <- train(med_rentE ~ med_incE,
@@ -276,10 +276,10 @@ Setting the same seed before each `train()` gives both models the same folds, so
 
 | | In-sample R² | CV RMSE |
 |---|---|---|
-| m1 | | |
-| m2 | | |
+| m1 | 0.46 |286.25 |
+| m2 | 0.57 |256.38 |
 
-Did adding variables improve R²? Did it improve CV RMSE by as much? For a prediction task, which column is the grade?
+Did adding variables improve R²? Did it improve CV RMSE by as much? For a prediction task, which column is the grade? RMSE 
 
 ---
 
@@ -307,7 +307,7 @@ The residuals are already a column in an sf data frame. Mapping them is one `geo
 ```{r}
 #| label: resid-map
 ggplot(tracts) +
-  geom_sf(aes(fill = ___), color = NA) +
+  geom_sf(aes(fill = resid_m2), color = NA) +
   scale_fill_gradient2(low = "#2166ac", mid = "grey95", high = "#b2182b",
                        midpoint = 0, labels = scales::dollar) +
   theme_void() +

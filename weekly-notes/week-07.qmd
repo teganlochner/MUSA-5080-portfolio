@@ -1,0 +1,50 @@
+---
+title: "Week 7: Where the Model Goes Wrong"
+description: "I am so tired today and I didn't finish my assignment"
+date: 2026-10-16
+---
+
+## What We Did
+
+<!-- CHANGE THIS: replace with your own notes -->
+
+
+    
+    
+
+## Key Concepts
+
+REVEIW
+the fold that broke: 
+  one small district has all of its tracts in the test fold
+  so the model was trained without ever seeing that level, and it cant predict it
+  fix: merge small groups before cross-validation
+
+KNN = K nearest neighbors 
+  
+Tobbler's Law - all things are related, near things are more related 
+Spatial lag
+  conceptualize as "my neighbors' average" - each house get the average residual of its 5 nearest neighbors
+  
+Moran's I - "Moran's index is an important spatial statistical measure used to determine the presence or absence of spatial autocorrelation"
+  the equation asks: When I'm above average, are my neighbors above average too?
+  moran.mc - shuffles the residuals across houses 499 times. If the real I beats almost all the shuffles, the clustering isn't luck. 
+  
+
+## Proving R Works
+
+The chunk below runs when this page renders. If you can see a result underneath
+it on your published site, R and Quarto are talking to each other correctly.
+
+```{r}
+sessionInfo()$R.version$version.string
+```
+
+## Reflection
+
+<!-- CHANGE THIS: 3-4 sentences -->
+
+## Questions I Still Have
+
+
+
