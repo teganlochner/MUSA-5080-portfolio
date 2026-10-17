@@ -52,6 +52,7 @@ library(tidyverse)
 library(tidycensus)
 library(sf)
 library(caret)
+library(spdep)
 
 Sys.getenv("CENSUS_API_KEY") != ""   # should print TRUE
 ```

@@ -1,0 +1,15 @@
+{
+  "hash": "4837a6cedbed5bd64d87351b5a3d28fa",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Week 7: Where the Model Goes Wrong\"\ndescription: \"I am so tired today and I didn't finish my assignment\"\ndate: 2026-10-16\n---\n\n## What We Did\n\n<!-- CHANGE THIS: replace with your own notes -->\n\n\n    \n    \n\n## Key Concepts\n\nREVEIW\nthe fold that broke: \n  one small district has all of its tracts in the test fold\n  so the model was trained without ever seeing that level, and it cant predict it\n  fix: merge small groups before cross-validation\n\nKNN = K nearest neighbors \n  \nTobbler's Law - all things are related, near things are more related \nSpatial lag\n  conceptualize as \"my neighbors' average\" - each house get the average residual of its 5 nearest neighbors\n  \nMoran's I - \"Moran's index is an important spatial statistical measure used to determine the presence or absence of spatial autocorrelation\"\n  the equation asks: When I'm above average, are my neighbors above average too?\n  moran.mc - shuffles the residuals across houses 499 times. If the real I beats almost all the shuffles, the clustering isn't luck. \n  \n\n## Proving R Works\n\nThe chunk below runs when this page renders. If you can see a result underneath\nit on your published site, R and Quarto are talking to each other correctly.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nsessionInfo()$R.version$version.string\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] \"R version 4.6.1 (2026-06-24)\"\n```\n\n\n:::\n:::\n\n\n## Reflection\n\n<!-- CHANGE THIS: 3-4 sentences -->\n\n## Questions I Still Have\n\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
