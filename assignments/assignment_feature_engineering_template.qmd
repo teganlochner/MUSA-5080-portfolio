@@ -153,9 +153,9 @@ philly_tracts <- philly_tracts %>%
       total_hhM
     ),
     y_cv = (y_moe / 1.645) / y * 100,
-    medhhinc = "medhhinc",
-    publictransit = "publictransit",
-    bachelors = "bachelors"
+    medhhinc = replace_na(medhhincE, 0),
+    publictransit = publictransitE,
+    bachelors = bachelorsE
   )
 ```
 
@@ -271,12 +271,12 @@ summary(m1)
 model_log <- model_log %>%
   add_row(model = "m1", added = "ACS baseline",
           cv_rmse = cv_rmse(f1, tracts),
-          notes = "___")
+          notes = "ACS baseline: income, public transit, commuting, and bachelor's degree")
 
 model_log
 ```
 
-Write the CV RMSE as a sentence, in your outcome's units: "On tracts it hasn't seen, the baseline model misses by about ___."
+Write the CV RMSE as a sentence, in your outcome's units: "On tracts it hasn't seen, the baseline model misses by about 14.89%."
 
 ### 2C: Where is the baseline wrong?
 
@@ -297,7 +297,7 @@ ggplot(tracts) +
 
 **Answer:** Where do the residuals cluster? What might those places have in common that your model doesn't know about? **Use this answer to choose your open data layers in Part 3.**
 
-*Your answer:*
+*Your answer:* The residuals cluster around center city. These areas are the most dense parts of the city, and thus it is very expensive to own a car here. Difficult parking, easy walkability, and good access to public transit discourage residents in these areas to own cars. Although the model accounts for commuting by public transit, it does not account for how expensive parking may be in any given census tract. 
 
 ---
 
@@ -384,19 +384,40 @@ Pull **at least two layers** that you think relate to your outcome. Base your ch
 
 ```{r}
 #| label: my-layers
-layer1 <- carto_get(
-  "SELECT the_geom, ___
-   FROM ___
-   WHERE ___"
+
+violations_url <- paste0(
+  "https://phl.carto.com/api/v2/sql?q=",
+  URLencode(
+    "SELECT *
+     FROM parking_violations
+     LIMIT 10000"
+  ),
+  "&format=geojson"
+)
+
+violations <- st_read(violations_url, quiet = TRUE) %>%
+  st_transform(st_crs(tracts))
+
+
+fatal_crashes_url <- paste0(
+  "https://phl.carto.com/api/v2/sql?q=",
+  URLencode("SELECT * FROM fatal_crashes"),
+  "&format=geojson"
+)
+
+fatal_crashes <- st_read(
+  fatal_crashes_url,
+  quiet = TRUE
 ) %>%
   st_transform(st_crs(tracts))
 
-layer2 <- ___
+violations
+fatal_crashes
 ```
 
 **Answer:** Why these layers? What do you expect them to capture that the ACS variables don't?
 
-*Your answer:*
+*Your answer:* I chose these layers because they detail what the driving situations like on the street. The first layer shows parking violations and the second shows fatal crashes. People living in areas where they are more likely to receive parking violation tickets or experience a fatal crash are less likely to own cars. Intially, I wanted to use parking permits and walkability scores but I was having a very difficult time handling the data. I also consulted AI for the code because I kept running into errors with the initial code.  
 
 ---
 
@@ -474,23 +495,111 @@ Build **at least three spatial features** from your own layers, and use at least
 
 ```{r}
 #| label: my-spatial
-tracts <- tracts %>%
-  mutate(___ = ___)
+tracts_proj <- st_transform(tracts, 2272)
+violations_proj <- st_transform(violations, 2272)
+fatal_proj <- st_transform(fatal_crashes, 2272)
 
-f2 <- y ~ ___
+# join each violation point to a census tract
+violations_joined <- st_join(
+  violations_proj,
+  tracts_proj["GEOID"],
+  join = st_within
+)
 
-model_log <- model_log %>%
-  add_row(model = "m2", added = "___",
-          cv_rmse = cv_rmse(f2, tracts),
-          notes = "___")
+# count violations in each tract
+violation_counts <- violations_joined |> 
+  st_drop_geometry() |> 
+  count(GEOID, name = "parking_violations")
 
-# repeat for each feature
+# add counts to tracts and replace missing counts with zero
+tracts_proj <- tracts_proj |> 
+  left_join(violation_counts, by = "GEOID") |> 
+  mutate(parking_violations = coalesce(parking_violations, 0L))
+
+# assign crashes to tracts
+crashes_joined <- st_join(
+  fatal_proj,
+  tracts_proj["GEOID"],
+  join = st_within
+)
+
+# count crashes per tract
+crash_counts <- crashes_joined |> 
+  st_drop_geometry() |> 
+  count(GEOID, name = "fatal_crashes")
+
+# calculate tract area in square kilometers and density
+tracts_proj <- tracts_proj |> 
+  left_join(crash_counts, by = "GEOID") |> 
+  mutate(
+    fatal_crashes = coalesce(fatal_crashes, 0L),
+    area_sqkm = as.numeric(st_area(geometry)) / 1e6,
+    crash_density = fatal_crashes / area_sqkm
+  )
+
+# remove crashes with missing or empty geometry
+fatal_valid <- fatal_proj[
+  !st_is_empty(fatal_proj) &
+    !is.na(st_geometry(fatal_proj)),
+]
+
+# calculate tract centroids
+tract_centroids <- st_centroid(tracts_proj)
+
+# find nearest crash for each centroid
+nearest_crash <- st_nearest_feature(
+  tract_centroids,
+  fatal_valid
+)
+
+# calculate distances in meters
+tracts_proj$nearest_crash_m <- as.numeric(
+  st_distance(
+    tract_centroids,
+    fatal_valid[nearest_crash, ],
+    by_element = TRUE
+  )
+)
+
+# model 2: parking violations
+f2 <- y ~ parking_violations
+
+model_log <- model_log |> 
+  add_row(
+    model = "m2",
+    added = "parking_violations",
+    cv_rmse = cv_rmse(f2, tracts_proj),
+    notes = "Count of parking violations within each census tract"
+  )
+
+# model 3: fatal crash density
+f3 <- y ~ parking_violations + crash_density
+
+model_log <- model_log |> 
+  add_row(
+    model = "m3",
+    added = "crash_density",
+    cv_rmse = cv_rmse(f3, tracts_proj),
+    notes = "Fatal crashes per square kilometer"
+  )
+
+# model 4: distance to nearest fatal crash
+f4 <- y ~ parking_violations + crash_density + nearest_crash_m
+
+model_log <- model_log |> 
+  add_row(
+    model = "m4",
+    added = "nearest_crash_m",
+    cv_rmse = cv_rmse(f4, tracts_proj),
+    notes = "Distance from tract centroid to nearest fatal crash, in meters"
+  )
+
 model_log
 ```
 
 **Answer:** Which spatial feature helped most? Did any feature you expected to help do nothing, or make CV RMSE worse? Why might that be?
 
-*Your answer:*
+*Your answer:* The distance to the nearest crash has the lowest CV RMSE, 14.34, but it is not significantly better than the initial CV RMSE which was 14.89. The parking violations spatial feature has a worse RMSE. This could be because it is more likely to receive a parking violation in center city, the area with the highest residuals, than in other parts of the city. 
 
 ---
 
@@ -576,13 +685,55 @@ If a category has only a handful of tracts, its coefficient is unstable, and in 
 Try **at least one of each**: a log, a squared term, and a categorical variable. Choose which variables to transform based on your plots, not at random. Log each model.
 
 ```{r}
+#| label: plot-feature-distributions
+
+# plot 1: Parking violations per census tract
+plot1 <- hist(
+  tracts_proj$parking_violations,
+  main = "Parking Violations per Census Tract",
+  xlab = "Number of violations",
+  ylab = "Number of census tracts",
+  col = "lightblue",
+  border = "white"
+)
+
+# plot 2: Fatal crash density
+plot2 <- hist(
+  tracts_proj$crash_density,
+  main = "Fatal Crash Density",
+  xlab = "Fatal crashes per square kilometer",
+  ylab = "Number of census tracts",
+  col = "lightcoral",
+  border = "white"
+)
+
+# plot 3: Distance to nearest fatal crash
+plot3 <- hist(
+  tracts_proj$nearest_crash_m,
+  main = "Distance to Nearest Fatal Crash",
+  xlab = "Distance (meters)",
+  ylab = "Number of census tracts",
+  col = "lightgreen",
+  border = "white"
+)
+
+plot1
+plot2
+plot3
+```
+```{r}
+tracts_proj$lnparking_violations <- log1p(tracts_proj$parking_violations)
+```
+
+
+```{r}
 #| label: my-transforms
-f_log <- y ~ ___
+f_log <- y ~ lnparking_violations + crash_density + nearest_crash_m
 
 model_log <- model_log %>%
-  add_row(model = "m_", added = "log of ___",
-          cv_rmse = cv_rmse(f_log, tracts),
-          notes = "___")
+  add_row(model = "m5", added = "log of parking violations",
+          cv_rmse = cv_rmse(f_log, tracts_proj),
+          notes = "logged parking violations, crash density, nearest crashes")
 
 # squared term
 
@@ -593,7 +744,7 @@ model_log
 
 **Answer:** Which transformation helped most? For your categorical variable, write one sentence reading one of its coefficients correctly, naming the reference level.
 
-*Your answer:*
+*Your answer:* 
 
 ---
 
@@ -603,15 +754,16 @@ Combine the features and transformations that earned their place, **judged by CV
 
 ```{r}
 #| label: final
-f_final <- y ~ ___
+f_final <- y ~ lnparking_violations + crash_density + nearest_crash_m + medhhinc + publictransit + bachelors
 
-m_final <- lm(f_final, data = tracts)
+
+m_final <- lm(f_final, data = tracts_proj)
 summary(m_final)
 
 model_log <- model_log %>%
-  add_row(model = "final", added = "___",
-          cv_rmse = cv_rmse(f_final, tracts),
-          notes = "___")
+  add_row(model = "final", added = "lnparking_violations",
+          cv_rmse = cv_rmse(f_final, tracts_proj),
+          notes = "logged parking violations, crash density, nearest crash, median hh income, public transit commuters, bachelor's degree or higher")
 
 model_log
 ```
@@ -620,24 +772,26 @@ model_log
 
 ```{r}
 #| label: resid-map-2
-tracts <- tracts %>% mutate(resid_final = residuals(m_final))
+tracts_proj <- tracts_proj %>% mutate(resid_final = residuals(m_final))
 
-ggplot(tracts) +
+ggplot(tracts_proj) +
   geom_sf(aes(fill = resid_final), color = NA) +
   scale_fill_gradient2(low = "#2166ac", mid = "grey95", high = "#b2182b", midpoint = 0) +
   theme_void() +
   labs(title = "Final model: where it's wrong",
        subtitle = "Red = actual higher than predicted",
        fill = "Residual")
+
+
 ```
 
-Put your two residual maps side by side, or put them next to each other in the rendered document. Did the clusters from Part 2C shrink? Where did they stay?
+Put your two residual maps side by side, or put them next to each other in the rendered document. Did the clusters from Part 2C shrink? Where did they stay? No, I think that the residuals got bigger :/
 
 ### Are the biggest misses in the least reliable tracts?
 
 ```{r}
 #| label: fog
-ggplot(tracts, aes(x = y_cv, y = abs(resid_final))) +
+ggplot(tracts_proj, aes(x = y_cv, y = abs(resid_final))) +
   geom_point(alpha = 0.5) +
   geom_smooth(se = FALSE) +
   labs(x = "CV of your outcome estimate (%)", y = "Size of the miss") +
@@ -650,10 +804,10 @@ ggplot(tracts, aes(x = y_cv, y = abs(resid_final))) +
 
 Answer in prose, drawing on your model log (incorporate our words of the day for bonus points. just kidding):
 
-1. **What helped, and what didn't?** Name the feature that lowered CV RMSE the most and the one that disappointed you most. Offer a reason for each.
-2. **Read one coefficient twice.** Choose a variable in your final model. Give its β̂ reading and its ŷ reading in one sentence each.
-3. **What's still missing?** Look at your final residual map. Name one thing about those places you'd want to measure next, and where you might get the data.
-4. **How much of the remaining error might be uncertainty or statistical noise?** Use your last plot.
+1. **What helped, and what didn't?** Name the feature that lowered CV RMSE the most and the one that disappointed you most. Offer a reason for each. dstance to crashes lowered the CV RMSE the most and counts of parking violations raised it. I think this is because people are less likely to own a car in areas where they are likely to crash it, and more parking violation counts could be a result of more cars on the street. 
+2. **Read one coefficient twice.** Choose a variable in your final model. Give its β̂ reading and its ŷ reading in one sentence each. lnparking_violations: B - one unit increase in the natural log of parking violations is associated with a 5.08 percent point increase in the percent of households without a vehicle. y - one unit increase of the natural log of parking violations increases the model's predicted percentage of households without a vehicle by 5.086
+3. **What's still missing?** Look at your final residual map. Name one thing about those places you'd want to measure next, and where you might get the data. I would want to know the walkability score. Areas that are more walkable will also likely have less car ownership. 
+4. **How much of the remaining error might be uncertainty or statistical noise?** Use your last plot. I think a lot. 
 
 *Your answer:*
 
