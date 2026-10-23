@@ -1,0 +1,42 @@
+---
+title: "Week 8: LISA"
+description: "keep it pushing"
+date: 2026-10-23
+---
+
+## What We Did
+
+<!-- CHANGE THIS: replace with your own notes -->
+
+    
+
+## Key Concepts
+
+LISA: local indicators of spatial association
+  identifies: house, predicted value, deviation, neighbors (using row-standardization)
+  creates: local Moran's I, local Moran's I can be larger than 1 
+  
+  everything receives a label, residual = actual - predicted
+  high-high: I am under predicted, my neighbors are under predicted - a pocket that the model unveils, likely a missing amenity
+  high-low: I am under predicted, my neighbors are over predicted - one house worth more than its block, some unusual about the house
+  low-high: I am over predicted, my neighbors are under predicted - one house worth less than its block, some unusual about the house
+  low, low: I am over predicted, my neighbors are over predicted - a pocket that the model unveils, likely a missing amenity
+  
+
+## Proving R Works
+
+The chunk below runs when this page renders. If you can see a result underneath
+it on your published site, R and Quarto are talking to each other correctly.
+
+```{r}
+sessionInfo()$R.version$version.string
+```
+
+## Reflection
+
+<!-- CHANGE THIS: 3-4 sentences -->
+
+## Questions I Still Have
+
+
+
