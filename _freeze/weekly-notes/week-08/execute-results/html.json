@@ -1,0 +1,15 @@
+{
+  "hash": "27a42c7af18c3d3fed7ec51eabde9292",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Week 8: LISA\"\ndescription: \"keep it pushing\"\ndate: 2026-10-23\n---\n\n## What We Did\n\n<!-- CHANGE THIS: replace with your own notes -->\n\n    \n\n## Key Concepts\n\nLISA: local indicators of spatial association\n  identifies: house, predicted value, deviation, neighbors (using row-standardization)\n  creates: local Moran's I, local Moran's I can be larger than 1 \n  \n  everything receives a label, residual = actual - predicted\n  high-high: I am under predicted, my neighbors are under predicted - a pocket that the model unveils, likely a missing amenity\n  high-low: I am under predicted, my neighbors are over predicted - one house worth more than its block, some unusual about the house\n  low-high: I am over predicted, my neighbors are under predicted - one house worth less than its block, some unusual about the house\n  low, low: I am over predicted, my neighbors are over predicted - a pocket that the model unveils, likely a missing amenity\n  \n\n## Proving R Works\n\nThe chunk below runs when this page renders. If you can see a result underneath\nit on your published site, R and Quarto are talking to each other correctly.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nsessionInfo()$R.version$version.string\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] \"R version 4.6.1 (2026-06-24)\"\n```\n\n\n:::\n:::\n\n\n## Reflection\n\n<!-- CHANGE THIS: 3-4 sentences -->\n\n## Questions I Still Have\n\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
