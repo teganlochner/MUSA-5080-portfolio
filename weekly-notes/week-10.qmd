@@ -30,6 +30,16 @@ if p = 0.455, then the odds are 0.455(1-0.455) = 0.835. It is 0.835 more likely 
 
 For every 100 people not rearrested, 84 are. 
 
+confusion matrix 
+true positive (TP) - predicted 1, actual 1
+false positive (FP) - predicted 1, actual 0
+false negative (FN) - predicted 0, actual 1
+true negative (TN) - predicted 0, actual 0
+
+sensitivity = TP/(TP+FN) -> of all the people who held disease, how many did we catch 
+specificity = TN/(TN+FP) -> of all the people who didnt have it, how many did we correctly leave alone?
+precision = TP/(TP+FP) -> of all predicted silk, how many actually were? 
+
 ## Proving R Works
 
 The chunk below runs when this page renders. If you can see a result underneath
