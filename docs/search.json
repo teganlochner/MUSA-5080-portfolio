@@ -109,7 +109,7 @@
     "href": "weekly-notes/index.html",
     "title": "Weekly Notes",
     "section": "",
-    "text": "Notes from each week of MUSA 5080. New entries appear here automatically — add a .qmd file to this folder and render.\n\n\n\n\n\n\n\n\n\n\n\nWeek 8: LISA\n\n\nkeep it pushing\n\n\n\n\n\nOct 23, 2026\n\n\n\n\n\n\n\nWeek 7: Where the Model Goes Wrong\n\n\nI am so tired today and I didn’t finish my assignment\n\n\n\n\n\nOct 16, 2026\n\n\n\n\n\n\n\nWeek 5: Machine Learning\n\n\nlike sure\n\n\n\n\n\nSep 25, 2026\n\n\n\n\n\n\n\nWeek 4: Coordinate Systems and Map Projections\n\n\nIt’s the best.\n\n\n\n\n\nSep 18, 2026\n\n\n\n\n\n\n\nWeek 3: ggplot and MOEs\n\n\nMy professor said it would be fun.\n\n\n\n\n\nSep 11, 2026\n\n\n\n\n\n\n\nWeek 2: dplyr\n\n\nAnalyzing and manipulating US Census data using dplyr.\n\n\n\n\n\nSep 4, 2026\n\n\n\n\n\n\n\nWeek 1: Getting Set Up\n\n\nFirst impressions, and getting the workflow running.\n\n\n\n\n\nAug 28, 2026\n\n\n\n\n\nNo matching items"
+    "text": "Notes from each week of MUSA 5080. New entries appear here automatically — add a .qmd file to this folder and render.\n\n\n\n\n\n\n\n\n\n\n\nWeek 10: Geographic Cross Validation\n\n\n:)\n\n\n\n\n\nNov 6, 2026\n\n\n\n\n\n\n\nWeek 8: LISA\n\n\nkeep it pushing\n\n\n\n\n\nOct 23, 2026\n\n\n\n\n\n\n\nWeek 7: Where the Model Goes Wrong\n\n\nI am so tired today and I didn’t finish my assignment\n\n\n\n\n\nOct 16, 2026\n\n\n\n\n\n\n\nWeek 5: Machine Learning\n\n\nlike sure\n\n\n\n\n\nSep 25, 2026\n\n\n\n\n\n\n\nWeek 4: Coordinate Systems and Map Projections\n\n\nIt’s the best.\n\n\n\n\n\nSep 18, 2026\n\n\n\n\n\n\n\nWeek 3: ggplot and MOEs\n\n\nMy professor said it would be fun.\n\n\n\n\n\nSep 11, 2026\n\n\n\n\n\n\n\nWeek 2: dplyr\n\n\nAnalyzing and manipulating US Census data using dplyr.\n\n\n\n\n\nSep 4, 2026\n\n\n\n\n\n\n\nWeek 1: Getting Set Up\n\n\nFirst impressions, and getting the workflow running.\n\n\n\n\n\nAug 28, 2026\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "data/readme.html",
@@ -668,6 +668,48 @@
     "objectID": "weekly-notes/week-08.html#questions-i-still-have",
     "href": "weekly-notes/week-08.html#questions-i-still-have",
     "title": "Week 8: LISA",
+    "section": "Questions I Still Have",
+    "text": "Questions I Still Have"
+  },
+  {
+    "objectID": "weekly-notes/week-10.html",
+    "href": "weekly-notes/week-10.html",
+    "title": "Week 10: Geographic Cross Validation",
+    "section": "",
+    "text": "previous cross-validation techniques we have been using are k-folds, here’s a new one! k-folds do not account for spatial leakage, geographic cross-validation does."
+  },
+  {
+    "objectID": "weekly-notes/week-10.html#what-we-did",
+    "href": "weekly-notes/week-10.html#what-we-did",
+    "title": "Week 10: Geographic Cross Validation",
+    "section": "",
+    "text": "previous cross-validation techniques we have been using are k-folds, here’s a new one! k-folds do not account for spatial leakage, geographic cross-validation does."
+  },
+  {
+    "objectID": "weekly-notes/week-10.html#key-concepts",
+    "href": "weekly-notes/week-10.html#key-concepts",
+    "title": "Week 10: Geographic Cross Validation",
+    "section": "Key Concepts",
+    "text": "Key Concepts\nGeneralized Linear Modelling, GLM Solution: Link Function Link(g): Map Outcomes -&gt; Predictor’s without breaking the boundaries rules - there cannot be negative numbers, you cannot go past 1 Inverse Link(g-1): Map Predictor’s -&gt; Outcome turn a mathematical score into real world predictions\nModel Random Component(y) Bounded Expected Values Link Function Inverse Link Linear Binomial Probability P,(0,1) Logit Link, ln(P/(1-P)) g^-1, sigmoid function, (en/(1+en)) Poisson Poisson E(0, infinity) Log Link, log(u) e^-1\nProbability(p) ; odds: p/(1-p) -&gt; log odds/logit link ; ln(p/1-p) -&gt; B0 + B1….\nodds = p/(1-p), how many more times likely is it to happen than it does not? if p = 0.8, then the odds are 0.8/(1-0.8) = 4. It is 4 times more likely for something to happen than it does not. if p = 0.5, then the odds are 0.5/(1-0.5) = 1. There is an even likelihood for something to happen than it does not. if p = 0.455, then the odds are 0.455(1-0.455) = 0.835. It is 0.835 more likely for something to happen than it does not. (not very likely)\nFor every 100 people not rearrested, 84 are."
+  },
+  {
+    "objectID": "weekly-notes/week-10.html#proving-r-works",
+    "href": "weekly-notes/week-10.html#proving-r-works",
+    "title": "Week 10: Geographic Cross Validation",
+    "section": "Proving R Works",
+    "text": "Proving R Works\nThe chunk below runs when this page renders. If you can see a result underneath it on your published site, R and Quarto are talking to each other correctly.\n\nsessionInfo()$R.version$version.string\n\n[1] \"R version 4.6.1 (2026-06-24)\""
+  },
+  {
+    "objectID": "weekly-notes/week-10.html#reflection",
+    "href": "weekly-notes/week-10.html#reflection",
+    "title": "Week 10: Geographic Cross Validation",
+    "section": "Reflection",
+    "text": "Reflection"
+  },
+  {
+    "objectID": "weekly-notes/week-10.html#questions-i-still-have",
+    "href": "weekly-notes/week-10.html#questions-i-still-have",
+    "title": "Week 10: Geographic Cross Validation",
     "section": "Questions I Still Have",
     "text": "Questions I Still Have"
   }

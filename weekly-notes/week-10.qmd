@@ -1,0 +1,49 @@
+---
+title: "Week 10: Geographic Cross Validation "
+description: ":)"
+date: 2026-11-06
+---
+
+## What We Did
+
+previous cross-validation techniques we have been using are k-folds, here's a new one! k-folds do not account for spatial leakage, geographic cross-validation does. 
+    
+
+## Key Concepts
+
+Generalized Linear Modelling, GLM Solution: Link Function 
+  Link(g): Map Outcomes -> Predictor's
+  without breaking the boundaries rules - there cannot be negative numbers, you cannot go past 1
+  Inverse Link(g-1): Map Predictor's -> Outcome 
+  turn a mathematical score into real world predictions 
+  
+Model       Random Component(y)       Bounded Expected Values       Link Function             Inverse Link
+Linear      Binomial                  Probability P,(0,1)           Logit Link, ln(P/(1-P))   g^-1, sigmoid function, (e^n/(1+e^n))
+Poisson     Poisson                   E(0, infinity)                Log Link, log(u)          e^-1
+
+Probability(p) ; odds: p/(1-p) -> log odds/logit link ; ln(p/1-p) -> B0 + B1....
+
+odds = p/(1-p), how many more times likely is it to happen than it does not? 
+if p = 0.8, then the odds are 0.8/(1-0.8) = 4. It is 4 times more likely for something to happen than it does not.
+if p = 0.5, then the odds are 0.5/(1-0.5) = 1. There is an even likelihood for something to happen than it does not. 
+if p = 0.455, then the odds are 0.455(1-0.455) = 0.835. It is 0.835 more likely for something to happen than it does not. (not very likely)
+
+For every 100 people not rearrested, 84 are. 
+
+## Proving R Works
+
+The chunk below runs when this page renders. If you can see a result underneath
+it on your published site, R and Quarto are talking to each other correctly.
+
+```{r}
+sessionInfo()$R.version$version.string
+```
+
+## Reflection
+
+<!-- CHANGE THIS: 3-4 sentences -->
+
+## Questions I Still Have
+
+
+
