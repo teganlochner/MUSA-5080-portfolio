@@ -1,0 +1,35 @@
+---
+title: "Week 11: Geographic Cross Validation "
+description: "sorry i was late to class"
+date: 2026-11-13
+---
+
+## What We Did
+
+review of last class + worksheet!
+
+## Key Concepts
+
+sensitivity - of the people who were sick, how many did we catch?
+specificity - of the people who were healthy, how many did we correctly leave alone? 
+
+If we reduce our cutoff (ex: 0.30) then sensitivity increases and specificity decreases
+IF we increase our cutoff (ex: 0.50) then sensitivity decreases and specificity increases 
+
+## Proving R Works
+
+The chunk below runs when this page renders. If you can see a result underneath
+it on your published site, R and Quarto are talking to each other correctly.
+
+```{r}
+sessionInfo()$R.version$version.string
+```
+
+## Reflection
+
+<!-- CHANGE THIS: 3-4 sentences -->
+
+## Questions I Still Have
+
+
+
