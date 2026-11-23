@@ -2,15 +2,18 @@
   {
     "listing": "/assignments/index.html",
     "items": [
+      "/assignments/about.html",
       "/assignments/assignment_feature_engineering_template.html",
-      "/assignments/assignment5.html",
+      "/assignments/A6_parole_reform.html",
       "/assignments/Assignment 3.html",
-      "/assignments/assignment2 .html"
+      "/assignments/assignment2 .html",
+      "/assignments/assignment5.html"
     ]
   },
   {
     "listing": "/weekly-notes/index.html",
     "items": [
+      "/weekly-notes/week-11.html",
       "/weekly-notes/week-10.html",
       "/weekly-notes/week-08.html",
       "/weekly-notes/week-07.html",

@@ -68,7 +68,7 @@ A few things to know before you start:
 #| label: setup
 library(tidyverse)
 
-nij <- read_csv("nij_recidivism.csv") %>%
+nij <- read_csv("assignments/nij_recidivism.csv") %>%
   mutate(
     recid              = as.integer(Recidivism_Within_3years == "Yes"),
     male               = as.integer(Gender == "M"),

@@ -1,0 +1,15 @@
+{
+  "hash": "bab8665e26f4e4f19b7b0907ba88780b",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Week 11: Geographic Cross Validation \"\ndescription: \"sorry i was late to class\"\ndate: 2026-11-13\n---\n\n## What We Did\n\nreview of last class + worksheet!\n\n## Key Concepts\n\nsensitivity - of the people who were sick, how many did we catch?\nspecificity - of the people who were healthy, how many did we correctly leave alone? \n\nIf we reduce our cutoff (ex: 0.30) then sensitivity increases and specificity decreases\nIF we increase our cutoff (ex: 0.50) then sensitivity decreases and specificity increases \n\n## Proving R Works\n\nThe chunk below runs when this page renders. If you can see a result underneath\nit on your published site, R and Quarto are talking to each other correctly.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nsessionInfo()$R.version$version.string\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] \"R version 4.6.1 (2026-06-24)\"\n```\n\n\n:::\n:::\n\n\n## Reflection\n\n<!-- CHANGE THIS: 3-4 sentences -->\n\n## Questions I Still Have\n\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
